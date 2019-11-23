@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/fetcher');
+mongoose.connect('mongodb://localhost/fetcher', {useMongoClient: true});
 
 let repoSchema = mongoose.Schema({
   // TODO: your schema here!
@@ -27,10 +27,12 @@ let save = (avatar, login, reponame, repourl, repoforks) => {
     if (err) {
       return console.error(err);
     } else {
-      console.log("REPO WAS SAVED!");
+      console.log(`REPO: ${reponame} WAS SAVED!`);
     }
   })
 }
 
-module.exports.save = save;
-module.exports = Repo;
+module.exports = save;
+// module.exports = Repo;
+// need to create a helper function here instead of exporting repo
+// Repo.find().sort({forks: 1}).limit(25); // table is called repos in mongodb!!

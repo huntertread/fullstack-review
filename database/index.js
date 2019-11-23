@@ -32,7 +32,14 @@ let save = (avatar, login, reponame, repourl, repoforks) => {
   })
 }
 
-module.exports = save;
-// module.exports = Repo;
-// need to create a helper function here instead of exporting repo
-// Repo.find().sort({forks: 1}).limit(25); // table is called repos in mongodb!!
+const find25 = () => {
+  var top25 = Repo.find({}).limit(25).sort({"forks": -1})
+  return new Promise ((resolve, reject) => {
+    resolve(top25)
+  })
+}
+
+module.exports = {
+  save: save,
+  find25: find25
+ }

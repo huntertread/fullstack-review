@@ -2,7 +2,7 @@ const express = require('express');
 let app = express();
 const bodyParser = require('body-parser');
 const getReposByUsername = require('../helpers/github.js');
-const save = require('../database/index.js');
+const dbhelper = require('../database/index.js');
 // const Repo = require('../database/index.js');
 
 app.use(bodyParser.urlencoded({extended: false})); // set this to true?
@@ -25,25 +25,26 @@ app.post('/repos', function (req, res) {
         var repoName = results[i]['name'];
         var repoUrl = results[i]['url'];
         var forks = results[i]['forks'];
-        // console.log(avatar);
-        // console.log(login);
-        // console.log(repoName);
-        // console.log(repoUrl);
-        // console.log(forks);
-        save(avatar, login, repoName, repoUrl, forks);
+        dbhelper.save(avatar, login, repoName, repoUrl, forks);
       }
     })
+    // add a then for successful res.send
     .catch((err) => {
       console.error(err);
     })
 });
 
 app.get('/repos', function (req, res) {
-  // console.log("GOT SOMETHING")
-  // TODO - your code here!
-  // This route should send back the top 25 repos
-  // query mongo for all documents with forks value greater than n
-  // Repo.find().sort({forks: 1}).limit(25); // DO NOT USE THIS HERE
+  // console.log(dbhelper.find25());
+  // var top25 = JSON.stringify(dbhelper.find25());
+  // console.log(dbhelper.find25());
+  dbhelper.find25()
+    .then((results) => {
+      res.status(200).send(results)
+    })
+    .catch((err) => {
+      console.log('there was an error in server get request')
+    })
 });
 
 let port = 1128;

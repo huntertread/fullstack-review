@@ -33,3 +33,4 @@ let save = (avatar, login, reponame, repourl, repoforks) => {
 }
 
 module.exports.save = save;
+module.exports = Repo;

@@ -3,7 +3,6 @@ let app = express();
 const bodyParser = require('body-parser');
 const getReposByUsername = require('../helpers/github.js');
 const dbhelper = require('../database/index.js');
-// const Repo = require('../database/index.js');
 
 app.use(bodyParser.urlencoded({extended: false})); // set this to true?
 app.use(bodyParser.json());
@@ -28,22 +27,24 @@ app.post('/repos', function (req, res) {
         dbhelper.save(avatar, login, repoName, repoUrl, forks);
       }
     })
-    // add a then for successful res.send
+    .then(() => {
+      res.status(201).send(results)
+    })
     .catch((err) => {
       console.error(err);
+      res.status(404).send('there was an error with your post request')
     })
 });
 
 app.get('/repos', function (req, res) {
-  // console.log(dbhelper.find25());
-  // var top25 = JSON.stringify(dbhelper.find25());
   // console.log(dbhelper.find25());
   dbhelper.find25()
     .then((results) => {
       res.status(200).send(results)
     })
     .catch((err) => {
-      console.log('there was an error in server get request')
+      console.err(err)
+      res.status(404).send('there was an error with your get request');
     })
 });
 

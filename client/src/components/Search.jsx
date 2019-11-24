@@ -17,9 +17,7 @@ class Search extends React.Component {
   }
 
   search() {
-    this.props.onSearch(this.state.term);
-    // may need some sort of async here
-    this.props.getTop25();
+    this.props.onSearch(this.state.term, this.props.getTop25); // calling getTop25 as callback for onSearch
   }
 
   render() {
